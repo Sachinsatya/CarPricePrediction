@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Car Price Predictor</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">CAR PRICE PREDICTOR</h1>
+        <form>
+            <div class="form-group">
+                <label for="year">Year</label>
+                <input type="number" class="form-control" id="year">
+            </div>
+            <div class="form-group">
+                <label for="kms">Kms Driven</label>
+                <input type="number" class="form-control" id="kms">
+            </div>
+            <div class="form-group">
+                <label for="present_price">Present Price (in lacs)</label>
+                <input type="number" class="form-control" id="present_price">
+            </div>
+            <div class="form-group">
+                <label for="fuel_type">Fuel Type</label>
+                <select class="form-control" id="fuel_type">
+                    <option>CNG</option>
+                    <option>Diesel</option>
+                    <option>Petrol</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="transmission">Transmission</label>
+                <select class="form-control" id="transmission">
+                    <option>Automatic</option>
+                    <option>Manual</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="owner">Owner</label>
+                <select class="form-control" id="owner">
+                    <option>First</option>
+                    <option>Second</option>
+                    <option>Third</option>
+                    <option>Fourth</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="predict()">Predict</button>
+        </form>
+        <div class="mt-3" id="result"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        function predict() {
+            var year = document.getElementById('year').value;
+            var kms = document.getElementById('kms').value;
+            var presentPrice = document.getElementById('present_price').value;
+            var fuelType = document.getElementById('fuel_type').value;
+            var transmission = document.getElementById('transmission').value;
+            var owner = document.getElementById('owner').value;
+
+            var input_data = {
+                "Year": year,
+                "Kms_Driven": kms,
+                "Present_Price": presentPrice,
+                "Fuel_Type": fuelType,
+                "Transmission": transmission,
+                "Owner": owner
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(input_data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = '<div class="alert alert-success" role="alert">The Price of the Car is ' + data.prediction + ' lacks</div>';
+            });
+        }
+    </script>
+</body>
+</html>
